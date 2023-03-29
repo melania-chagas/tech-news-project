@@ -46,7 +46,7 @@ def get_url(selector):
 
 def get_title(selector):
     return (
-        selector.css('title::text')
+        selector.css('div.entry-header-inner.cs-bg-dark h1.entry-title::text')
                 .get()
                 .strip()  # Remove espaços em branco no início/fim da string
     )
@@ -67,12 +67,14 @@ def get_reading_time(selector):
 
 
 def get_summary(selector):
-    return (
-        selector.css('div.entry-content > p:first-child')
+    all_p_tags = (
+        selector.css('div.entry-content p')
                 .xpath('string()')  # Extrai somente o texto
-                .get()
-                .replace('\n', '')  # Substitui '\n' por ''
-                .strip()  # Remove espaços em branco no início/fim da string
+                .getall()
+    )
+    return (
+        all_p_tags[0].replace('\n', '')  # Substitui '\n' por ''
+        .strip()
     )
 
 
