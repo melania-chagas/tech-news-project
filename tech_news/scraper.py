@@ -1,6 +1,7 @@
 import requests
 import time
 from parsel import Selector
+import re
 
 
 # Requisito 1
@@ -37,8 +38,60 @@ def scrape_next_page_link(html_content):
 
 
 # Requisito 4
+def get_url(selector):
+    link = selector.css('link[rel="canonical"]')
+    url_page = link.xpath('@href').get()
+    return url_page
+
+
+def get_title(selector):
+    return (
+        selector.css('title::text')
+                .get()
+                .strip()  # Remove espaços em branco no início/fim da string
+    )
+
+
+def get_timestamp(selector):
+    return selector.css('li.meta-date::text').get()
+
+
+def get_author(selector):
+    return selector.css('span.author a::text').get()
+
+
+def get_reading_time(selector):
+    li_text = selector.css('li.meta-reading-time::text').get()
+    number = re.findall(r'\d+', li_text)  # Regex que captura somente números
+    return list(map(int, number))[0]
+
+
+def get_summary(selector):
+    return (
+        selector.css('div.entry-content > p:first-child')
+                .xpath('string()')  # Extrai somente o texto
+                .get()
+                .replace('\n', '')  # Substitui '\n' por ''
+                .strip()  # Remove espaços em branco no início/fim da string
+    )
+
+
+def get_category(selector):
+    return selector.css('a.category-style span.label::text').get()
+
+
 def scrape_news(html_content):
-    """Seu código deve vir aqui"""
+    selector = Selector(html_content)
+
+    return {
+        'url': get_url(selector),
+        'title': get_title(selector),
+        'timestamp': get_timestamp(selector),
+        'writer': get_author(selector),
+        'reading_time': get_reading_time(selector),
+        'summary': get_summary(selector),
+        'category': get_category(selector)
+    }
 
 
 # Requisito 5
@@ -48,5 +101,9 @@ def get_tech_news(amount):
 
 if __name__ == '__main__':
     html = fetch('https://blog.betrybe.com')
-    next_page = scrape_next_page_link(html)
-    print(next_page)
+    url_list = scrape_updates(html)
+    url = url_list[0]
+    html_url = fetch(url)
+    scrape = scrape_news(html_url)
+
+    print(scrape)
