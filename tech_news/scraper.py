@@ -48,7 +48,7 @@ def get_title(selector):
     return (
         selector.css('div.entry-header-inner.cs-bg-dark h1.entry-title::text')
                 .get()
-                .strip()  # Remove espaços em branco no início/fim da string
+                .strip()  # Remove espaços em branco no início/fim da string.
     )
 
 
