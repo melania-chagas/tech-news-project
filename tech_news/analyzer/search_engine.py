@@ -33,10 +33,15 @@ def search_by_date(date):
 
 # Requisito 9
 def search_by_category(category):
-    """Seu código deve vir aqui"""
+    news = find_news()
+    news_by_category = []
+    for new in news:
+        if category.lower() in new['category'].lower():
+            news_by_category.append((new['title'], new['url']))
+    return news_by_category
 
 
 if __name__ == '__main__':
-    news_by_date = search_by_date('2023-03-22')
+    news_by_category = search_by_category('Tecnologia')
 
-    print(news_by_date)
+    print(news_by_category)
