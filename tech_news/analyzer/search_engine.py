@@ -14,12 +14,21 @@ def search_by_title(title):
 
 # Requisito 8
 def search_by_date(date):
+    news = find_news()
     # %Y representa o ano com 4 dígitos
     # %m representa o mês com 2 dígitos
     # %d representa o dia com 2 dígitos
-    formatted_date = datetime.strptime(date, '%Y-%m-%d').strftime('%d/%m/%Y')
-    return formatted_date
-    """Seu código deve vir aqui"""
+    try:
+        formatted_date = datetime.strptime(date, '%Y-%m-%d') \
+            .strftime('%d/%m/%Y')
+    except ValueError:
+        raise ValueError('Data inválida')
+
+    news_by_date = []
+    for new in news:
+        if new['timestamp'] == formatted_date:
+            news_by_date.append((new['title'], new['url']))
+    return news_by_date
 
 
 # Requisito 9
@@ -28,6 +37,6 @@ def search_by_category(category):
 
 
 if __name__ == '__main__':
-    news_by_date = search_by_date('2023-04-05')
+    news_by_date = search_by_date('2023-03-22')
 
     print(news_by_date)
