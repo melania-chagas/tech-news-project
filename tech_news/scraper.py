@@ -2,6 +2,7 @@ import requests
 import time
 from parsel import Selector
 import re
+from tech_news.database import create_news
 
 
 # Requisito 1
@@ -112,7 +113,9 @@ def get_tech_news(amount):
     url_list = url_list_first_page
     if amount <= 12:
         requested_amount_of_urls = url_list_first_page[0:amount]
-        return requested_scrape_news(requested_amount_of_urls)
+        news = requested_scrape_news(requested_amount_of_urls)
+        create_news(news)
+        return news
 
     else:
         while len(url_list) <= amount:
@@ -120,7 +123,9 @@ def get_tech_news(amount):
             html_content = fetch(next_page_link)
             url_list += scrape_updates(html_content)
         requested_amount_of_urls = url_list[0:amount]
-        return requested_scrape_news(requested_amount_of_urls)
+        news = requested_scrape_news(requested_amount_of_urls)
+        create_news(news)
+        return news
 
 
 if __name__ == '__main__':
