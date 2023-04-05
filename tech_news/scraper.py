@@ -98,14 +98,21 @@ def scrape_news(html_content):
 
 # Requisito 5
 def get_tech_news(amount):
-    """Seu código deve vir aqui"""
+    url = 'https://blog.betrybe.com'
+    html_content = fetch(url)
+    url_list_first_page = scrape_updates(html_content)
+    url_list = url_list_first_page
+    if amount <= 12:
+        return url_list_first_page[0:amount]
+    else:
+        while len(url_list) <= amount:
+            next_page_link = scrape_next_page_link(html_content)
+            html_content = fetch(next_page_link)
+            url_list += scrape_updates(html_content)
+        return url_list[0:amount]
 
 
 if __name__ == '__main__':
-    html = fetch('https://blog.betrybe.com')
-    url_list = scrape_updates(html)
-    url = url_list[0]
-    html_url = fetch(url)
-    scrape = scrape_news(html_url)
+    requested_amount_of_urls = get_tech_news(15)
 
-    print(scrape)
+    print(requested_amount_of_urls)
