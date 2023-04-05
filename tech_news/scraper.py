@@ -128,7 +128,10 @@ def get_tech_news(amount):
         return news
 
 
-if __name__ == '__main__':
-    requested_amount_of_urls = get_tech_news(20)
+get_tech_news(5)
 
-    print(requested_amount_of_urls)
+
+# if __name__ == '__main__':
+#     requested_amount_of_urls = get_tech_news(20)
+
+#     print(requested_amount_of_urls)
