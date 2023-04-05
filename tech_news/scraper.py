@@ -97,22 +97,33 @@ def scrape_news(html_content):
 
 
 # Requisito 5
+def requested_scrape_news(requested_amount_of_urls):
+    news = []
+    for url in requested_amount_of_urls:
+        html_content = fetch(url)
+        news.append(scrape_news(html_content))
+    return news
+
+
 def get_tech_news(amount):
     url = 'https://blog.betrybe.com'
     html_content = fetch(url)
     url_list_first_page = scrape_updates(html_content)
     url_list = url_list_first_page
     if amount <= 12:
-        return url_list_first_page[0:amount]
+        requested_amount_of_urls = url_list_first_page[0:amount]
+        return requested_scrape_news(requested_amount_of_urls)
+
     else:
         while len(url_list) <= amount:
             next_page_link = scrape_next_page_link(html_content)
             html_content = fetch(next_page_link)
             url_list += scrape_updates(html_content)
-        return url_list[0:amount]
+        requested_amount_of_urls = url_list[0:amount]
+        return requested_scrape_news(requested_amount_of_urls)
 
 
 if __name__ == '__main__':
-    requested_amount_of_urls = get_tech_news(15)
+    requested_amount_of_urls = get_tech_news(20)
 
     print(requested_amount_of_urls)
