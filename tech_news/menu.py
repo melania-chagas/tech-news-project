@@ -32,6 +32,7 @@ def response_options_message(option):
         '5': "Encerrando script\n",
     }
     if option not in options:
+        # stderr - imprime apenas exceções e mensagens de erro
         return sys.stderr.write('Opção inválida\n')
 
     return options.get(str(option))
@@ -50,8 +51,7 @@ def analyzer_menu():
     sys.stdout.write(message)
     option = input()
     response = response_options_message(option)
-    # print('olá1', response)
     sys.stdout.write(str(response))
     input_response = input()
-    # print('olá', input_response)
+
     return response_options(option, input_response)
